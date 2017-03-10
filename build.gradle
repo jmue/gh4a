@@ -1,12 +1,10 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
@@ -14,11 +12,9 @@ repositories {
     maven { url 'http://dl.bintray.com/populov/maven' }
     maven { url 'https://github.com/kageiit/maven-repo/raw/master' }
     mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 android {
     signingConfigs {
@@ -75,9 +71,6 @@ dependencies {
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        transitive = true;
-    }
 }
 
 def Properties props = new Properties()

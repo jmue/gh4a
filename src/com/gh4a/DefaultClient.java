@@ -4,8 +4,6 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.client.PagedRequest;
 
-import java.net.HttpURLConnection;
-
 public class DefaultClient extends GitHubClient {
     private static final String DEFAULT_HEADER_ACCEPT = "application/vnd.github.v3.full+json";
 
@@ -16,13 +14,6 @@ public class DefaultClient extends GitHubClient {
     public DefaultClient(String headerAccept) {
         super();
         setHeaderAccept(headerAccept);
-    }
-
-    @Override
-    protected HttpURLConnection configureRequest(HttpURLConnection request) {
-        super.configureRequest(request);
-        Gh4Application.trackVisitedUrl(request.getURL().toExternalForm());
-        return request;
     }
 
     @Override

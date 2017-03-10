@@ -19,12 +19,9 @@ package com.gh4a;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.text.TextUtils;
 
-import com.crashlytics.android.Crashlytics;
 import com.gh4a.fragment.SettingsFragment;
 
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -49,8 +46,6 @@ import org.eclipse.egit.github.core.service.WatcherService;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.HashMap;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * The Class Gh4Application.
@@ -88,10 +83,6 @@ public class Gh4Application extends Application implements OnSharedPreferenceCha
     private static final String KEY_LOGIN = "USER_LOGIN";
     private static final String KEY_TOKEN = "Token";
 
-    private static final int MAX_TRACKED_URLS = 5;
-    private static int sNextUrlTrackingPosition = 0;
-    private static boolean sHasCrashlytics;
-
     /*
      * (non-Javadoc)
      * @see android.app.Application#onCreate()
@@ -105,12 +96,6 @@ public class Gh4Application extends Application implements OnSharedPreferenceCha
         SharedPreferences prefs = getPrefs();
         selectTheme(prefs.getInt(SettingsFragment.KEY_THEME, THEME_LIGHT));
         prefs.registerOnSharedPreferenceChangeListener(this);
-
-        boolean isDebuggable = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-        sHasCrashlytics = !isDebuggable && !TextUtils.equals(Build.DEVICE, "sdk");
-        if (sHasCrashlytics) {
-            Fabric.with(this, new Crashlytics());
-        }
 
         mPt = new PrettyTime();
 
@@ -161,18 +146,6 @@ public class Gh4Application extends Application implements OnSharedPreferenceCha
             mPt = new PrettyTime(newConfig.getLocales().get(0));
         } else {
             mPt = new PrettyTime(newConfig.locale);
-        }
-    }
-
-    /* package */ static void trackVisitedUrl(String url) {
-        synchronized (Gh4Application.class) {
-            if (sHasCrashlytics) {
-                Crashlytics.setString("github-url-" + sNextUrlTrackingPosition, url);
-                Crashlytics.setInt("last-url-position", sNextUrlTrackingPosition);
-                if (++sNextUrlTrackingPosition >= MAX_TRACKED_URLS) {
-                    sNextUrlTrackingPosition = 0;
-                }
-            }
         }
     }
 
